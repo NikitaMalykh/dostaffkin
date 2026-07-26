@@ -10,7 +10,7 @@ export class DeliveryApi {
 
   createDelivery(payload: any): Observable<any> {
     return this.http
-      .post<any>(`https://testologia.ru/delivery/create`, payload)
+      .post<any>('http://localhost:3000/api/orders', payload)
       .pipe(
         catchError((err) =>
           of({ error: err?.error?.error ?? 'Ошибка при создании заявки' })
@@ -20,7 +20,7 @@ export class DeliveryApi {
 
   getDeliveryInfo(id: number): Observable<any> {
     return this.http
-      .get<any>(`https://testologia.ru/delivery/info`, { params: { id } })
+      .get<any>(`http://localhost:3000/api/orders/${id}`)
       .pipe(
         catchError((err) =>
           of({ error: err?.error?.error ?? 'Ошибка при получении статуса' })
