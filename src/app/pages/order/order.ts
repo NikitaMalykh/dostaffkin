@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { Header } from '../../header/header';
 import { DELIVERY_SIZES, DELIVERY_SPEEDS } from './order.config';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { UpperCasePipe } from '@angular/common';
 import { DeliveryApi } from '../../services/delivery-api';
 import { ToastrService } from 'ngx-toastr';
+import { normalizeRussianPhone, validateRussianPhone } from './phone.utils';
 
 declare var ymaps: any;
 
@@ -38,9 +39,21 @@ export class Order {
     });
     this.orderForm = this.formBuilder.group({
       name: ['', Validators.required],
-      phone: ['', [Validators.required]],
+      phone: ['', [Validators.required, this.russianPhoneValidator]],
       comment: ['']
     });
+  }
+
+  private russianPhoneValidator(control: AbstractControl): ValidationErrors | null {
+    const value = (control.value ?? '').toString();
+    return validateRussianPhone(value) ? null : { invalidRussianPhone: true };
+  }
+
+  public onPhoneInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = normalizeRussianPhone(input.value);
+    input.value = value;
+    this.orderForm.get('phone')?.setValue(value, { emitEvent: false });
   }
 
   ngOnInit() {

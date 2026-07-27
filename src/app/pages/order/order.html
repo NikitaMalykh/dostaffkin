@@ -97,8 +97,8 @@
                             <input id="customerName" formControlName="name" placeholder="Ваше имя" autocomplete="off" />
                         </div>
                         <div class="main-field">
-                            <input id="customerPhone" formControlName="phone" placeholder="Ваш телефон"
-                                autocomplete="off" inputmode="tel" />
+                            <input id="customerPhone" formControlName="phone" placeholder="79991234567"
+                                autocomplete="tel" inputmode="tel" (input)="onPhoneInput($event)" />
                         </div>
                         <div>
                             @if (this.orderForm.get('name')?.invalid && (this.orderForm.get('name')?.dirty ||
@@ -109,7 +109,13 @@
                         <div>
                             @if (this.orderForm.get('phone')?.invalid && (this.orderForm.get('phone')?.dirty ||
                             this.orderForm.get('phone')?.touched)) {
-                            <label for="customerName" class="input-error">Заполните телефон</label>
+                            <label for="customerPhone" class="input-error">
+                                @if (this.orderForm.get('phone')?.hasError('required')) {
+                                Заполните телефон
+                                } @else {
+                                Введите корректный номер телефона для России
+                                }
+                            </label>
                             }
                         </div>
                     </div>
